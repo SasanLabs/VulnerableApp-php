@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 class LevelConstants {
     const LEVEL_1 = "LEVEL_1";
     const LEVEL_2 = "LEVEL_2";
