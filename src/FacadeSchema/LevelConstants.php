@@ -1,6 +1,7 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 namespace facadeSchema;
-class LevelConstants {
+class LevelConstants
+{
     const LEVEL_1 = "LEVEL_1";
     const LEVEL_2 = "LEVEL_2";
     const LEVEL_3 = "LEVEL_3";
