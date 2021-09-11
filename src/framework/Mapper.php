@@ -1,7 +1,8 @@
 <?php
 namespace framework;
 use ReflectionClass;
-class Mapper{
+class Mapper
+{
     private $reflectionClass;
     private $methodname;
     private $instance;
@@ -11,9 +12,12 @@ class Mapper{
         $this->methodname = $methodname;
         $this->instance = $this->reflectionClass->newInstance();
     }
-    
-    function invoke() {
-        return $this->reflectionClass->getMethod($this->methodname)->invoke($this->instance);
+
+    function invoke()
+    {
+        return $this->reflectionClass
+            ->getMethod($this->methodname)
+            ->invoke($this->instance);
     }
 }
 ?>

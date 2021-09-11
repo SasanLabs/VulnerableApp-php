@@ -1,6 +1,7 @@
 <?php
 namespace facadeSchema;
-class Variant {
+class Variant
+{
     const UNSECURE = "UNSECURE";
     const SECURE = "SECURE";
 }
