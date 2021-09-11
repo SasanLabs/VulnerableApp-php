@@ -1,6 +1,9 @@
 <?php declare(strict_types = 1);
 namespace framework;
-class GenericResponse{
+
+use JsonSerializable;
+
+class GenericResponse implements JsonSerializable{
     private $isValid;
     private $content;
     private $error;
@@ -22,6 +25,10 @@ class GenericResponse{
     function get_error() {
         return $this->error;
     }
+    
+    public function jsonSerialize() {
+		return get_object_vars($this);
+	}
 }
 
 ?>
