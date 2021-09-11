@@ -1,6 +1,9 @@
 <?php
 namespace facadeSchema;
-class ResourceURI {
+
+use JsonSerializable;
+
+class ResourceURI implements JsonSerializable{
 
     private $resourceType = ResourceType::HTML;
     private $isAbsolute;
@@ -23,5 +26,9 @@ class ResourceURI {
     function get_resource_type(): string {
         return $this->resourceType;
     }
+
+    public function jsonSerialize() {
+		return get_object_vars($this);
+	}
 }
 ?>

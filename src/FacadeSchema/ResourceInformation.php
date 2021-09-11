@@ -1,6 +1,9 @@
 <?php
 namespace facadeSchema;
-class ResourceInformation {
+
+use JsonSerializable;
+
+class ResourceInformation  implements JsonSerializable{
     
     private $htmlResource;
     private $staticResources = array();
@@ -20,4 +23,8 @@ class ResourceInformation {
     function add_static_resources(ResourceURI $staticResources ) {
         array_push($this->staticResources, $staticResources);
     }
+    
+    public function jsonSerialize() {
+		return get_object_vars($this);
+	}
 }

@@ -6,4 +6,5 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*VulnerabilityDefinitions)$ $1.php [L]
 
-RewriteRule !(^(templates|VulnerabilityDefinitions).*) router/Router.php [L]
+RewriteRule !(^(templates|VulnerabilityDefinitions|images).*) router/Router.php [L]
+RewriteRule (^.*) $1

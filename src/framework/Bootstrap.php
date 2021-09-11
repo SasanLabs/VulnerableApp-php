@@ -30,8 +30,8 @@ class Bootstrap{
 
     function __construct() {
         array_push($this->vulnerability_definition_providers, new ReflectionClass(FileUpload::class));
-        $this->routing_url_to_mapper["/VulnerableApp-php/FileUpload/Level_1"] = new Mapper(new ReflectionClass(FileUpload::class), "level1");
-        $this->routing_url_to_mapper["/VulnerableApp-php/FileUpload/Level_2"] = new Mapper(new ReflectionClass(FileUpload::class), "level2");
+        $this->routing_url_to_mapper["/VulnerableApp-php/FileUpload/LEVEL_1"] = new Mapper(new ReflectionClass(FileUpload::class), "level1");
+        $this->routing_url_to_mapper["/VulnerableApp-php/FileUpload/LEVEL_2"] = new Mapper(new ReflectionClass(FileUpload::class), "level2");
     }
 }
 ?>
