@@ -3,21 +3,21 @@ namespace facadeSchema;
 class ResourceInformation {
     
     private $htmlResource;
-    private $staticResources;
+    private $staticResources = array();
 
     function get_html_resource(): string {
         return $this->htmlResource;
     }
 
-    function set_html_resource(string $htmlResource ) {
+    function set_html_resource(ResourceURI $htmlResource ) {
         $this->htmlResource = $htmlResource;
     }
 
-    function get_static_resources(): string{
+    function get_static_resources(): array{
         return $this->staticResources;
     }
 
-    function set_static_resources(string $staticResources ) {
-        $this->staticResources = $staticResources;
+    function add_static_resources(ResourceURI $staticResources ) {
+        array_push($this->staticResources, $staticResources);
     }
 }

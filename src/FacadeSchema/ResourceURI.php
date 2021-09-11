@@ -6,7 +6,7 @@ class ResourceURI {
     private $isAbsolute;
     private $uri;
 
-    function __construct(bool $isAbsolute, string $uri, ResourceType $resourceType) {
+    function __construct(bool $isAbsolute, string $uri, string $resourceType) {
         $this->isAbsolute = $isAbsolute;
         $this->uri = $uri;
         $this->resourceType = $resourceType;
@@ -20,7 +20,7 @@ class ResourceURI {
         return $this->uri;
     }
 
-    function get_resource_type(): ResourceType {
+    function get_resource_type(): string {
         return $this->resourceType;
     }
 }

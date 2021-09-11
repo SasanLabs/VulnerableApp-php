@@ -1,9 +1,9 @@
+# The below rule is used to stop the directory access in the browser.
+Options -Indexes
+
 # Validator: https://technicalseo.com/tools/htaccess/
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*VulnerabilityDefinitions)$ $1.php [L]
 
-
 RewriteRule !(^(templates|VulnerabilityDefinitions).*) router/Router.php [L]
-# The below rule is used to stop the directory access in the browser.
-# Options -Indexes
