@@ -1,4 +1,5 @@
 <?php
+namespace facadeSchema;
 class ResourceURI {
 
     private $resourceType = ResourceType::HTML;

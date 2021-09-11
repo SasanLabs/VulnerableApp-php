@@ -1,4 +1,5 @@
 <?php
+namespace facadeSchema;
 class ResourceInformation {
     
     private $htmlResource;
