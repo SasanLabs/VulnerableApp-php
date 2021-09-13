@@ -14,4 +14,5 @@ class LevelConstants
     const LEVEL_10 = "LEVEL_10";
     const LEVEL_11 = "LEVEL_11";
     const LEVEL_12 = "LEVEL_12";
+    const LEVEL_13 = "LEVEL_13";
 }
