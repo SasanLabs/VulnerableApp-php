@@ -79,9 +79,6 @@ class Bootstrap
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/FileUpload/LEVEL_12"
         ] = new Mapper(new ReflectionClass(FileUpload::class), "level12");
-        $this->routing_url_to_mapper[
-            "/VulnerableApp-php/FileUpload/LEVEL_13"
-        ] = new Mapper(new ReflectionClass(FileUpload::class), "level13");
     }
 }
 ?>
