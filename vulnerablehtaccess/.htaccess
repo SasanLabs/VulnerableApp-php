@@ -1,1 +1,1 @@
-AddHandler php5-script .php
+AddHandler application/x-httpd-php .php

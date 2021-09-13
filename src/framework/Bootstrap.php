@@ -49,6 +49,39 @@ class Bootstrap
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/FileUpload/LEVEL_2"
         ] = new Mapper(new ReflectionClass(FileUpload::class), "level2");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_3"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level3");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_4"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level4");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_5"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level5");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_6"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level6");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_7"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level7");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_8"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level8");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_9"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level9");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_10"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level10");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_11"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level11");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_12"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level12");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/FileUpload/LEVEL_13"
+        ] = new Mapper(new ReflectionClass(FileUpload::class), "level13");
     }
 }
 ?>
