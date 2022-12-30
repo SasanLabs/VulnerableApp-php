@@ -3,7 +3,7 @@ namespace framework;
 use fileupload\FileUpload;
 use ReflectionClass;
 use framework\Mapper;
-require __DIR__ . "/../fileUploadVulnerability/FileUpload.php";
+require __DIR__ . "/../FileUploadVulnerability/FileUpload.php";
 require __DIR__ . "/Mapper.php";
 class Bootstrap
 {
