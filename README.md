@@ -9,7 +9,7 @@ As VulnerableApp-php doesn't provide user interface and relies on [Owasp Vulnera
 
 For building the docker image and then using [VulnerableApp-Facade](https://github.com/SasanLabs/VulnerableApp-facade#simple-start) to test the working of the application.
 ```
-1. Build the docker image with command: docker build . -t sasanlabs/owasp-vulnerableapp-php
+1. Build the docker image with command: docker buildx build --platform linux/amd64,linux/arm64,linux/ppc64le -t sasanlabs/owasp-vulnerableapp-php:latest . --push
 2. Navigate to VulnerableApp-Facade and run it as described in VulnerableApp-Facade#simple-start
 ```
 
