@@ -6,4 +6,6 @@ COPY static/ /var/www/html/VulnerableApp-php/
 COPY resources/ /var/www/html/VulnerableApp-php/resources
 COPY vulnerablehtaccess/ /var/www/html/VulnerableApp-php/images/specialimages
 RUN sed -ri '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
-	&& sed -ri 's!<FilesMatch \\.php\$>!<FilesMatch "\\.(?:php|php5|php4|php3|phtml|phpt)$">!' /etc/apache2/conf-available/docker-php.conf
+	&& sed -ri 's!<FilesMatch \\.php\$>!<FilesMatch "\\.(?:php|php5|php4|php3|phtml|phpt)$">!' /etc/apache2/conf-available/docker-php.conf \
+	&& chown -R www-data:www-data /var/www/html/VulnerableApp-php/images \
+	&& chmod -R u+rwX /var/www/html/VulnerableApp-php/images

@@ -24,6 +24,12 @@ jobs:
           curl --fail --silent --request POST http://localhost:8080/VulnerableApp-php/NoSQLInjection/LEVEL_5 \
             --header 'Content-Type: application/json' \
             --data '{"username":{"$ne":null},"password":{"$ne":null}}' | grep --quiet '"isValid":false'
+      - name: Run file upload integration check
+        run: |
+          printf 'test image' > upload-test.png
+          curl --fail --silent --request POST http://localhost:8080/VulnerableApp-php/FileUpload/LEVEL_1 \
+            --form 'file=@upload-test.png;type=image/png' | grep --quiet '"isValid":true'
+          curl --fail --silent --output /dev/null http://localhost:8080/VulnerableApp-php/images/upload-test.png
       - name: Stop services
         if: always()
         run: docker compose down --volumes
