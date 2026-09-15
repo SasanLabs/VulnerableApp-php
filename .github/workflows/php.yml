@@ -1,0 +1,29 @@
+name: PHP validation
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start application dependencies
+        run: docker compose up --detach --build --wait
+      - name: Validate PHP syntax
+        run: docker compose exec --no-TTY vulnerableapp-php sh -c "find /var/www/html/VulnerableApp-php -name '*.php' -print0 | xargs -0 -n1 php -l"
+      - name: Run MongoDB NoSQL injection integration checks
+        run: |
+          curl --fail --silent http://localhost:8080/VulnerableApp-php/VulnerabilityDefinitions.php | grep --quiet NoSQLInjection
+          curl --fail --silent --request POST http://localhost:8080/VulnerableApp-php/NoSQLInjection/LEVEL_1 \
+            --header 'Content-Type: application/json' \
+            --data '{"username":{"$ne":null},"password":{"$ne":null}}' | grep --quiet '"isValid":true'
+          curl --fail --silent --request POST http://localhost:8080/VulnerableApp-php/NoSQLInjection/LEVEL_5 \
+            --header 'Content-Type: application/json' \
+            --data '{"username":{"$ne":null},"password":{"$ne":null}}' | grep --quiet '"isValid":false'
+      - name: Stop services
+        if: always()
+        run: docker compose down --volumes

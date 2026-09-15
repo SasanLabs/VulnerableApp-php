@@ -1,0 +1,24 @@
+services:
+  vulnerableapp-php:
+    build: .
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017
+      MONGODB_DATABASE: vulnerableapp_php
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+
+  mongodb:
+    image: mongo:8.0
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - mongodb-data:/data/db
+
+volumes:
+  mongodb-data:
