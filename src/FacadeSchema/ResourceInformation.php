@@ -28,7 +28,7 @@ class ResourceInformation implements JsonSerializable
         array_push($this->staticResources, $staticResources);
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return get_object_vars($this);
     }

@@ -2,10 +2,14 @@
 namespace framework;
 use fileupload\FileUpload;
 use magichash\MagicHash;
+use nosqlinjection\NoSQLInjection;
 use ReflectionClass;
+use scanner\DASTScanner;
 use framework\Mapper;
 require __DIR__ . "/../FileUploadVulnerability/FileUpload.php";
 require __DIR__ . "/../MagicHashVulnerability/MagicHash.php";
+require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjection.php";
+require __DIR__ . "/../Scanner/DASTScanner.php";
 require __DIR__ . "/Mapper.php";
 class Bootstrap
 {
@@ -48,6 +52,10 @@ class Bootstrap
         array_push(
             $this->vulnerability_definition_providers,
             new ReflectionClass(MagicHash::class)
+        );
+        array_push(
+            $this->vulnerability_definition_providers,
+            new ReflectionClass(NoSQLInjection::class)
         );
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/FileUpload/LEVEL_1"
@@ -95,6 +103,26 @@ class Bootstrap
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/MagicHash/LEVEL_3"
         ] = new Mapper(new ReflectionClass(MagicHash::class), "level3");
+
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/NoSQLInjection/LEVEL_1"
+        ] = new Mapper(new ReflectionClass(NoSQLInjection::class), "level1");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/NoSQLInjection/LEVEL_2"
+        ] = new Mapper(new ReflectionClass(NoSQLInjection::class), "level2");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/NoSQLInjection/LEVEL_3"
+        ] = new Mapper(new ReflectionClass(NoSQLInjection::class), "level3");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/NoSQLInjection/LEVEL_4"
+        ] = new Mapper(new ReflectionClass(NoSQLInjection::class), "level4");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/NoSQLInjection/LEVEL_5"
+        ] = new Mapper(new ReflectionClass(NoSQLInjection::class), "level5");
+
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/scanner/dast"
+        ] = new Mapper(new ReflectionClass(DASTScanner::class), "dast");
     }
 }
 ?>

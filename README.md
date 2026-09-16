@@ -13,6 +13,20 @@ For building the docker image and then using [VulnerableApp-Facade](https://gith
 2. Navigate to VulnerableApp-Facade and run it as described in VulnerableApp-Facade#simple-start
 ```
 
+### Local MongoDB development
+
+The NoSQL Injection vulnerability uses MongoDB. Start the PHP application and its MongoDB dependency locally with:
+
+```
+docker compose up --build
+```
+
+The PHP application is exposed at `http://localhost:8080/VulnerableApp-php/`. MongoDB is initialized automatically with level-specific users the first time the NoSQL Injection endpoints are used. Stop and remove local data with:
+
+```
+docker compose down --volumes
+```
+
 ## Contact
 Please raise a github issue for enhancement/issues in VulnerableApp-php or send email to karan.sasan@owasp.org regarding queries
 we will try to resolve issues asap.
