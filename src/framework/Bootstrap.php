@@ -4,10 +4,12 @@ use fileupload\FileUpload;
 use magichash\MagicHash;
 use nosqlinjection\NoSQLInjection;
 use ReflectionClass;
+use scanner\DASTScanner;
 use framework\Mapper;
 require __DIR__ . "/../FileUploadVulnerability/FileUpload.php";
 require __DIR__ . "/../MagicHashVulnerability/MagicHash.php";
 require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjection.php";
+require __DIR__ . "/../Scanner/DASTScanner.php";
 require __DIR__ . "/Mapper.php";
 class Bootstrap
 {
@@ -117,6 +119,10 @@ class Bootstrap
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/NoSQLInjection/LEVEL_5"
         ] = new Mapper(new ReflectionClass(NoSQLInjection::class), "level5");
+
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/scanner/dast"
+        ] = new Mapper(new ReflectionClass(DASTScanner::class), "dast");
     }
 }
 ?>
