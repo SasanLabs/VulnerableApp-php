@@ -1,6 +1,8 @@
 services:
   vulnerableapp-php:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       MONGODB_URI: mongodb://mongodb:27017
       MONGODB_DATABASE: vulnerableapp_php
@@ -9,6 +11,27 @@ services:
         condition: service_healthy
     ports:
       - "8080:80"
+    networks:
+      app_net:
+        aliases:
+          - VulnerableApp-php
+
+  vulnerableapp-facade:
+    image: sasanlabs/owasp-vulnerableapp-facade:latest
+    depends_on:
+      - vulnerableapp-php
+    ports:
+      - "80:80"
+    environment:
+      NGINX_HOST: foobar.com
+      NGINX_PORT: 80
+      ENABLE_VULNERABLEAPP_PHP: "true"
+      ENABLE_VULNERABLEAPP_JSP: "false"
+      ENABLE_LLMFORGE: "false"
+    networks:
+      app_net:
+        aliases:
+          - VulnerableApp-facade
 
   mongodb:
     image: mongo:8.0
@@ -17,8 +40,10 @@ services:
       interval: 5s
       timeout: 5s
       retries: 10
-    volumes:
-      - mongodb-data:/data/db
+    networks:
+      - app_net
 
-volumes:
-  mongodb-data:
+networks:
+  app_net:
+    name: vulnerableapp-php_net
+    driver: bridge
