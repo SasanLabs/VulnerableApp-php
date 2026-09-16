@@ -4,6 +4,7 @@ namespace mongo;
 
 use MongoDB\BSON\ObjectId;
 use MongoDB\Driver\BulkWrite;
+use MongoDB\Driver\Command;
 use MongoDB\Driver\Exception\Exception as MongoException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
@@ -52,6 +53,8 @@ class MongoConnection
         }
 
         try {
+            $this->ensureIndexes();
+
             $query = new Query(["seedMarker" => "nosql_injection_users"], ["limit" => 1]);
             $cursor = $this->manager->executeQuery($this->namespace("seed_metadata"), $query);
             if (count($cursor->toArray()) > 0) {
@@ -62,21 +65,56 @@ class MongoConnection
             $users = $this->buildSeedUsers();
             $bulkWrite = new BulkWrite();
             foreach ($users as $user) {
-                $bulkWrite->insert($user);
+                $bulkWrite->update(
+                    ["level" => $user["level"], "username" => $user["username"]],
+                    ['$set' => $user],
+                    ['upsert' => true]
+                );
             }
             $this->manager->executeBulkWrite($this->namespace("users"), $bulkWrite);
 
             $metadata = new BulkWrite();
-            $metadata->insert([
-                "_id" => new ObjectId(),
-                "seedMarker" => "nosql_injection_users",
-                "createdAt" => time(),
-            ]);
+            $metadata->update(
+                ["seedMarker" => "nosql_injection_users"],
+                [
+                    '$set' => [
+                        "seedMarker" => "nosql_injection_users",
+                        "createdAt" => time(),
+                    ],
+                    '$setOnInsert' => [
+                        "_id" => new ObjectId(),
+                    ],
+                ],
+                ['upsert' => true]
+            );
             $this->manager->executeBulkWrite($this->namespace("seed_metadata"), $metadata);
             $this->seeded = true;
         } catch (MongoException $exception) {
             throw new \RuntimeException("MongoDB seed failed: " . $exception->getMessage(), 0, $exception);
         }
+    }
+
+    private function ensureIndexes(): void
+    {
+        $usersIndexCommand = new Command([
+            "createIndexes" => "users",
+            "indexes" => [[
+                "name" => "level_username_unique",
+                "key" => ["level" => 1, "username" => 1],
+                "unique" => true,
+            ]],
+        ]);
+        $this->manager->executeCommand($this->database, $usersIndexCommand);
+
+        $seedMetadataIndexCommand = new Command([
+            "createIndexes" => "seed_metadata",
+            "indexes" => [[
+                "name" => "seed_marker_unique",
+                "key" => ["seedMarker" => 1],
+                "unique" => true,
+            ]],
+        ]);
+        $this->manager->executeCommand($this->database, $seedMetadataIndexCommand);
     }
 
     private function namespace(string $collection): string

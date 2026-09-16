@@ -30,7 +30,7 @@ class GenericResponse implements JsonSerializable
         return $this->error;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return get_object_vars($this);
     }

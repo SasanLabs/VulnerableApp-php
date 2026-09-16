@@ -29,7 +29,8 @@ jobs:
           printf 'test image' > upload-test.png
           curl --fail --silent --request POST http://localhost:8080/VulnerableApp-php/FileUpload/LEVEL_1 \
             --form 'file=@upload-test.png;type=image/png' | grep --quiet '"isValid":true'
-          curl --fail --silent --output /dev/null http://localhost:8080/VulnerableApp-php/images/upload-test.png
+          curl --fail --silent http://localhost:8080/VulnerableApp-php/images/upload-test.png \
+            | grep --quiet --fixed-strings --line-regexp 'test image'
       - name: Stop services
         if: always()
         run: docker compose down --volumes

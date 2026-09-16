@@ -1,6 +1,6 @@
-FROM php:8.0-apache
+FROM php:8.2-apache
 LABEL maintainer="KSASAN preetkaran20@gmail.com"
-RUN pecl install mongodb-1.16.2 && docker-php-ext-enable mongodb && a2enmod rewrite
+RUN pecl install mongodb && docker-php-ext-enable mongodb && a2enmod rewrite
 COPY src/ /var/www/html/VulnerableApp-php/
 COPY static/ /var/www/html/VulnerableApp-php/
 COPY resources/ /var/www/html/VulnerableApp-php/resources

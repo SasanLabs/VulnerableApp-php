@@ -32,6 +32,9 @@ class DASTScanner
         $hints = $level->get_hints();
         foreach ($hints as $hint) {
             foreach ($hint->get_vulnerability_types() as $vulnerabilityType) {
+                if (strtoupper($vulnerabilityType->get_identifier_type()) !== "CUSTOM") {
+                    continue;
+                }
                 $value = $vulnerabilityType->get_value();
                 if (!in_array($value, $names, true)) {
                     $names[] = $value;
@@ -41,6 +44,9 @@ class DASTScanner
 
         if (empty($names)) {
             foreach ($definition->get_vulnerability_types() as $vulnerabilityType) {
+                if (strtoupper($vulnerabilityType->get_identifier_type()) !== "CUSTOM") {
+                    continue;
+                }
                 $value = $vulnerabilityType->get_value();
                 if (!in_array($value, $names, true)) {
                     $names[] = $value;
