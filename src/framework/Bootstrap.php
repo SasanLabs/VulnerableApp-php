@@ -47,6 +47,9 @@ class Bootstrap
         return $vulnerability_definitions;
     }
 
+    /**
+     * Registers vulnerability providers and application routes, including scanner endpoints.
+     */
     function __construct()
     {
         NoSQLInjectionSeeder::seedIfRequired();
