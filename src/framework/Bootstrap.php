@@ -6,12 +6,14 @@ use nosqlinjection\NoSQLInjection;
 use nosqlinjection\NoSQLInjectionSeeder;
 use ReflectionClass;
 use scanner\DASTScanner;
+use scanner\SASTScanner;
 use framework\Mapper;
 require __DIR__ . "/../FileUploadVulnerability/FileUpload.php";
 require __DIR__ . "/../MagicHashVulnerability/MagicHash.php";
 require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjection.php";
 require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjectionSeeder.php";
 require __DIR__ . "/../Scanner/DASTScanner.php";
+require __DIR__ . "/../Scanner/SASTScanner.php";
 require __DIR__ . "/Mapper.php";
 class Bootstrap
 {
@@ -45,6 +47,9 @@ class Bootstrap
         return $vulnerability_definitions;
     }
 
+    /**
+     * Registers vulnerability providers and application routes, including scanner endpoints.
+     */
     function __construct()
     {
         NoSQLInjectionSeeder::seedIfRequired();
@@ -127,6 +132,9 @@ class Bootstrap
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/scanner/dast"
         ] = new Mapper(new ReflectionClass(DASTScanner::class), "dast");
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/scanner/sast"
+        ] = new Mapper(new ReflectionClass(SASTScanner::class), "sast");
     }
 }
 ?>
