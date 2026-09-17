@@ -53,6 +53,11 @@ class SASTScanner
         ],
     ];
 
+    /**
+     * Builds the SAST ground-truth rows for all cataloged vulnerable methods.
+     *
+     * @return array<int, array{cwe:string, filePath:string, line:int, numberOfSources:int, type:string}>
+     */
     private function buildScannerRows(): array
     {
         $rows = [];
@@ -73,6 +78,9 @@ class SASTScanner
         return $rows;
     }
 
+    /**
+     * Emits the SAST ground-truth catalog as JSON for facade aggregation.
+     */
     function sast(): void
     {
         header("Content-type: application/json");
