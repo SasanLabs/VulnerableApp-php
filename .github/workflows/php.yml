@@ -31,6 +31,12 @@ jobs:
             --form 'file=@upload-test.png;type=image/png' | grep --quiet '"isValid":true'
           curl --fail --silent http://localhost:8080/VulnerableApp-php/images/upload-test.png \
             | grep --quiet --fixed-strings --line-regexp 'test image'
+      - name: Run SAST scanner integration checks
+        run: |
+          curl --fail --silent http://localhost:8080/VulnerableApp-php/scanner/sast \
+            | python3 -c 'import json, sys; data = json.load(sys.stdin); required = {"cwe", "filePath", "line", "numberOfSources", "type"}; assert data and all(required <= set(item) for item in data)'
+          curl --fail --silent http://localhost/scanner/sast \
+            | python3 -c 'import json, sys; data = json.load(sys.stdin); assert data.get("VulnerableApp-php")'
       - name: Stop services
         if: always()
         run: docker compose down --volumes
