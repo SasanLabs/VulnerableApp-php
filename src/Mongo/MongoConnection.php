@@ -2,10 +2,6 @@
 declare(strict_types=1);
 namespace mongo;
 
-use MongoDB\BSON\ObjectId;
-use MongoDB\Driver\BulkWrite;
-use MongoDB\Driver\Command;
-use MongoDB\Driver\Exception\Exception as MongoException;
 use MongoDB\Driver\Manager;
 use MongoDB\Driver\Query;
 
@@ -18,7 +14,6 @@ class MongoConnection
 
     private $manager;
     private $database;
-    private $seeded = false;
 
     private function __construct()
     {
@@ -36,7 +31,6 @@ class MongoConnection
 
     public function findOne(string $collection, array $filter): ?array
     {
-        $this->seedIfRequired();
         $query = new Query($filter, ["limit" => 1]);
         $cursor = $this->manager->executeQuery($this->namespace($collection), $query);
         $documents = $cursor->toArray();
@@ -46,106 +40,19 @@ class MongoConnection
         return json_decode(json_encode($documents[0]), true);
     }
 
-    public function seedIfRequired(): void
+    public function manager(): Manager
     {
-        if ($this->seeded) {
-            return;
-        }
-
-        try {
-            $this->ensureIndexes();
-
-            $query = new Query(["seedMarker" => "nosql_injection_users"], ["limit" => 1]);
-            $cursor = $this->manager->executeQuery($this->namespace("seed_metadata"), $query);
-            if (count($cursor->toArray()) > 0) {
-                $this->seeded = true;
-                return;
-            }
-
-            $users = $this->buildSeedUsers();
-            $bulkWrite = new BulkWrite();
-            foreach ($users as $user) {
-                $bulkWrite->update(
-                    ["level" => $user["level"], "username" => $user["username"]],
-                    ['$set' => $user],
-                    ['upsert' => true]
-                );
-            }
-            $this->manager->executeBulkWrite($this->namespace("users"), $bulkWrite);
-
-            $metadata = new BulkWrite();
-            $metadata->update(
-                ["seedMarker" => "nosql_injection_users"],
-                [
-                    '$set' => [
-                        "seedMarker" => "nosql_injection_users",
-                        "createdAt" => time(),
-                    ],
-                    '$setOnInsert' => [
-                        "_id" => new ObjectId(),
-                    ],
-                ],
-                ['upsert' => true]
-            );
-            $this->manager->executeBulkWrite($this->namespace("seed_metadata"), $metadata);
-            $this->seeded = true;
-        } catch (MongoException $exception) {
-            throw new \RuntimeException("MongoDB seed failed: " . $exception->getMessage(), 0, $exception);
-        }
+        return $this->manager;
     }
 
-    private function ensureIndexes(): void
+    public function database(): string
     {
-        $usersIndexCommand = new Command([
-            "createIndexes" => "users",
-            "indexes" => [[
-                "name" => "level_username_unique",
-                "key" => ["level" => 1, "username" => 1],
-                "unique" => true,
-            ]],
-        ]);
-        $this->manager->executeCommand($this->database, $usersIndexCommand);
-
-        $seedMetadataIndexCommand = new Command([
-            "createIndexes" => "seed_metadata",
-            "indexes" => [[
-                "name" => "seed_marker_unique",
-                "key" => ["seedMarker" => 1],
-                "unique" => true,
-            ]],
-        ]);
-        $this->manager->executeCommand($this->database, $seedMetadataIndexCommand);
+        return $this->database;
     }
 
-    private function namespace(string $collection): string
+    public function namespace(string $collection): string
     {
         return $this->database . "." . $collection;
-    }
-
-    private function buildSeedUsers(): array
-    {
-        $users = [];
-        for ($level = 1; $level <= 5; $level++) {
-            $password = "level" . $level . "_password";
-            $users[] = [
-                "_id" => new ObjectId(),
-                "level" => "LEVEL_" . $level,
-                "username" => "level" . $level . "_user",
-                "password" => $password,
-                "passwordHash" => password_hash($password, PASSWORD_DEFAULT),
-                "role" => "user",
-            ];
-            $adminPassword = "level" . $level . "_admin_secret";
-            $users[] = [
-                "_id" => new ObjectId(),
-                "level" => "LEVEL_" . $level,
-                "username" => "level" . $level . "_admin",
-                "password" => $adminPassword,
-                "passwordHash" => password_hash($adminPassword, PASSWORD_DEFAULT),
-                "role" => "admin",
-            ];
-        }
-        return $users;
     }
 }
 ?>

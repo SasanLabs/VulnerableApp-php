@@ -3,12 +3,14 @@ namespace framework;
 use fileupload\FileUpload;
 use magichash\MagicHash;
 use nosqlinjection\NoSQLInjection;
+use nosqlinjection\NoSQLInjectionSeeder;
 use ReflectionClass;
 use scanner\DASTScanner;
 use framework\Mapper;
 require __DIR__ . "/../FileUploadVulnerability/FileUpload.php";
 require __DIR__ . "/../MagicHashVulnerability/MagicHash.php";
 require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjection.php";
+require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjectionSeeder.php";
 require __DIR__ . "/../Scanner/DASTScanner.php";
 require __DIR__ . "/Mapper.php";
 class Bootstrap
@@ -45,6 +47,8 @@ class Bootstrap
 
     function __construct()
     {
+        NoSQLInjectionSeeder::seedIfRequired();
+
         array_push(
             $this->vulnerability_definition_providers,
             new ReflectionClass(FileUpload::class)
