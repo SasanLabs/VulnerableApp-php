@@ -6,12 +6,14 @@ use nosqlinjection\NoSQLInjection;
 use nosqlinjection\NoSQLInjectionSeeder;
 use ReflectionClass;
 use scanner\DASTScanner;
+use scanner\Sitemap;
 use framework\Mapper;
 require __DIR__ . "/../FileUploadVulnerability/FileUpload.php";
 require __DIR__ . "/../MagicHashVulnerability/MagicHash.php";
 require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjection.php";
 require __DIR__ . "/../NoSQLInjectionVulnerability/NoSQLInjectionSeeder.php";
 require __DIR__ . "/../Scanner/DASTScanner.php";
+require __DIR__ . "/../Scanner/Sitemap.php";
 require __DIR__ . "/Mapper.php";
 class Bootstrap
 {
@@ -127,6 +129,10 @@ class Bootstrap
         $this->routing_url_to_mapper[
             "/VulnerableApp-php/scanner/dast"
         ] = new Mapper(new ReflectionClass(DASTScanner::class), "dast");
+
+        $this->routing_url_to_mapper[
+            "/VulnerableApp-php/sitemap.xml"
+        ] = new Mapper(new ReflectionClass(Sitemap::class), "sitemap");
     }
 }
 ?>
