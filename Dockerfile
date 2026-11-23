@@ -1,6 +1,9 @@
 FROM php:8.2-apache
 LABEL maintainer="KSASAN preetkaran20@gmail.com"
 RUN pecl install mongodb && docker-php-ext-enable mongodb && a2enmod rewrite
+# allow_url_include is Off by default even with allow_url_fopen on; the RemoteFileInclusion
+# module needs it on to demonstrate include() actually executing a remote URL's response.
+RUN echo "allow_url_include = On" > /usr/local/etc/php/conf.d/allow-url-include.ini
 COPY src/ /var/www/html/VulnerableApp-php/
 COPY static/ /var/www/html/VulnerableApp-php/
 COPY resources/ /var/www/html/VulnerableApp-php/resources

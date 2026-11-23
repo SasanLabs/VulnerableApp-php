@@ -31,6 +31,33 @@ jobs:
             --form 'file=@upload-test.png;type=image/png' | grep --quiet '"isValid":true'
           curl --fail --silent http://localhost:8080/VulnerableApp-php/images/upload-test.png \
             | grep --quiet --fixed-strings --line-regexp 'test image'
+      - name: Run remote file inclusion integration check
+        run: |
+          # Host: localhost (no port) so the Host header the app sees matches a URL it can
+          # resolve against itself for the redirect hop in level 3, and so the "trusted
+          # host" check in levels 2 and 3 has a real, consistent value to check against.
+          # static/images/rfi-poc.txt is served as a plain static file (not executed by
+          # Apache, since its extension isn't .php), so this proves level 1's include()
+          # genuinely executes a remote response's PHP tags rather than only reflecting its
+          # content: RFI_PROOF_42 only appears if 40 + 2 was evaluated server-side.
+          curl --fail --silent --header 'Host: localhost' \
+            'http://localhost:8080/VulnerableApp-php/RemoteFileInclusion/LEVEL_1?page=http://localhost/VulnerableApp-php/images/rfi-poc.txt' \
+            | grep --quiet RFI_PROOF_42
+          curl --fail --silent --header 'Host: localhost' \
+            'http://localhost:8080/VulnerableApp-php/RemoteFileInclusion/LEVEL_2?page=http://example.org/x' \
+            | grep --quiet 'Blocked: page must be hosted on localhost'
+          curl --fail --silent --header 'Host: localhost' \
+            'http://localhost:8080/VulnerableApp-php/RemoteFileInclusion/LEVEL_3?page=http://example.org/localhost' \
+            | grep --quiet 'Blocked: page must be hosted on localhost'
+          curl --fail --silent --header 'Host: localhost' \
+            'http://localhost:8080/VulnerableApp-php/RemoteFileInclusion/LEVEL_3?page=http://localhost/VulnerableApp-php/RemoteFileInclusion/redirect?to=http://localhost/VulnerableApp-php/images/rfi-poc.txt' \
+            | grep --quiet RFI_PROOF_42
+          curl --fail --silent --header 'Host: localhost' \
+            'http://localhost:8080/VulnerableApp-php/RemoteFileInclusion/LEVEL_4?page=http://localhost/VulnerableApp-php/RemoteFileInclusion/redirect?to=http://localhost/VulnerableApp-php/images/rfi-poc.txt' \
+            | grep --quiet '"isValid":false'
+          curl --fail --silent --header 'Host: localhost' \
+            'http://localhost:8080/VulnerableApp-php/RemoteFileInclusion/LEVEL_4?page=welcome' \
+            | grep --quiet '"isValid":true'
       - name: Stop services
         if: always()
         run: docker compose down --volumes
